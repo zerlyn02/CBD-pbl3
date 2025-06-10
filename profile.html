@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Editable Profile Card</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <style>
+    [contenteditable]:focus {
+      outline: 2px solid #38a169;
+      background-color: #f0fff4;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+  <div class="w-full max-w-4xl p-6 bg-white shadow-xl rounded-lg">
+    <div class="mb-4">
+      <button onclick="history.back()" class="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded">
+        ← Back
+      </button>
+    </div>
+
+    <div class="flex flex-col lg:flex-row items-center">
+      <!-- Profile Image -->
+      <div class="relative mb-4 lg:mb-0">
+        <div id="profileImage" class="w-48 h-48 rounded-full bg-cover bg-center border-2 border-gray-400"
+             style="background-image: url('https://source.unsplash.com/MP0IUfwrn0A');">
+        </div>
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'profile')" class="mt-2 text-sm" />
+      </div>
+
+      <!-- Profile Info -->
+      <div class="flex-1 lg:ml-8 text-center lg:text-left">
+        <h1 id="name" class="text-3xl font-bold" contenteditable="true">Your Name</h1>
+        <div class="border-b-2 border-green-500 opacity-25 my-3 w-1/2 mx-auto lg:mx-0"></div>
+
+        <p class="text-base font-bold flex items-center justify-center lg:justify-start">
+          <svg class="h-4 fill-current text-green-700 mr-2" viewBox="0 0 20 20"><path d="M2 2h16v16H2z"/></svg>
+          <span id="title" contenteditable="true">What you do</span>
+        </p>
+
+        <p class="text-gray-600 text-sm flex items-center justify-center lg:justify-start">
+          <svg class="h-4 fill-current text-green-700 mr-2" viewBox="0 0 20 20"><path d="M2 2h16v16H2z"/></svg>
+          <span id="location" contenteditable="true">Your Location</span>
+        </p>
+
+        <p id="description" class="text-sm mt-4" contenteditable="true">
+          Optional short description about yourself.
+        </p>
+
+        <!-- Buttons -->
+        <div class="mt-6 flex flex-wrap justify-center lg:justify-start space-x-4">
+          <button onclick="saveProfile()" class="bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded">
+            Save
+          </button>
+          <button onclick="loadProfile()" class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
+            Undo Changes
+          </button>
+        </div>
+
+        <!-- Background Upload -->
+        <div class="mt-4">
+          <label class="block text-sm font-bold mb-2">Upload Background Image:</label>
+          <input type="file" accept="image/*" onchange="uploadImage(event, 'background')" class="text-sm" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  function saveProfile() {
+    const profileImage = document.getElementById("profileImage").style.backgroundImage;
+    const backgroundImage = document.body.style.backgroundImage;
+
+    const data = {
+      name: document.getElementById("name").innerText,
+      title: document.getElementById("title").innerText,
+      location: document.getElementById("location").innerText,
+      description: document.getElementById("description").innerText,
+      profileImage: profileImage,
+      background: backgroundImage
+    };
+    localStorage.setItem("profileData", JSON.stringify(data));
+    alert("Profile saved!");
+  }
+
+  function loadProfile() {
+    const data = JSON.parse(localStorage.getItem("profileData"));
+    if (data) {
+      document.getElementById("name").innerText = data.name;
+      document.getElementById("title").innerText = data.title;
+      document.getElementById("location").innerText = data.location;
+      document.getElementById("description").innerText = data.description;
+      document.getElementById("profileImage").style.backgroundImage = data.profileImage;
+      document.body.style.backgroundImage = data.background;
+    } else {
+      alert("No saved profile found.");
+    }
+  }
+
+  function uploadImage(event, type) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    resizeAndConvertToBase64(file, (resizedDataURL) => {
+        const imageUrl = `url('${resizedDataURL}')`;
+        if (type === 'profile') {
+        document.getElementById("profileImage").style.backgroundImage = imageUrl;
+        } else if (type === 'background') {
+        document.body.style.backgroundImage = imageUrl;
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundRepeat = "no-repeat";
+        }
+    });
+    }
+
+
+  window.onload = loadProfile;
+
+  function resizeAndConvertToBase64(file, callback, maxSize = 200) {
+  const reader = new FileReader();
+  reader.onload = function (event) {
+    const img = new Image();
+    img.onload = function () {
+      const canvas = document.createElement("canvas");
+      const scale = Math.min(maxSize / img.width, maxSize / img.height);
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const dataURL = canvas.toDataURL("image/jpeg", 0.7); // Compress quality to 70%
+      callback(dataURL);
+    };
+    img.src = event.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organized.</title>
+    <link rel="stylesheet" href="css/style.css">
+    <meta name="description" content="">
+
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+
+    <link rel="icon" href="/favicon.ico" sizes="any">
+
+</head>
+
+<body>
+<div id="reminder-form" class="overlay">
+    <div class="form-popup">
+        <h2>Add a Reminder</h2>
+        <form class="reminder-form-container">
+            <input type="text" placeholder="Enter Title" id="titleR" maxlength="50" required>
+            <textarea placeholder="Enter Details" id="detailsR" maxlength="300"></textarea>
+            <div class="dateColors">
+                <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="dateR"
+                       placeholder="Enter Date">
+                <div class="colors">
+                    <div class="selectedColor Color-circle color1" tabindex="0"></div>
+                    <div class="Color-circle color2" tabindex="0"></div>
+                    <div class="Color-circle color3" tabindex="0"></div>
+                </div>
+            </div>
+            <div class="btnContainer">
+                <div id="ErrorReminderAdd"></div>
+                <a type="submit" class="btn addR">Add</a>
+                <a type="button" class="btn cancel" onclick="closeForm()">Close</a>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="note-form" class="overlay">
+    <div class="form-popup">
+        <h2>Add a Note</h2>
+        <form class="note-form-container">
+            <input type="text" placeholder="Enter Title" id="titleN" maxlength="50" required>
+            <textarea placeholder="Enter Note" id="detailsN" maxlength="300"></textarea>
+
+            <div class="dateColors">
+                <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="dateN"
+                       placeholder="Enter Date">
+                <div class="colors">
+                    <div class="selectedColor Color-circle color1" tabindex="0"></div>
+                    <div class="Color-circle color2" tabindex="0"></div>
+                    <div class="Color-circle color3" tabindex="0"></div>
+                </div>
+            </div>
+            <div class="flags">
+                <input type="checkbox" id="workFlag" class="flag" value="Work"><label for="workFlag"> Work</label>
+                <input type="checkbox" id="urgentFlag" class="flag" value="Urgent"><label for="urgentFlag">
+                Urgent</label>
+                <input type="checkbox" id="dueSoonFlag" class="flag" value="DueSoon"><label for="dueSoonFlag">
+                DueSoon</label>
+            </div>
+            <div class="btnContainer">
+                <div id="ErrorNoteAdd"></div>
+                <a type="submit" class="btn addN">Add</a>
+                <a type="button" class="btn cancel" onclick="closeForm()">Close</a>
+            </div>
+        </form>
+    </div>
+</div>
+<nav>
+    <a><span class="maintitle"> Organiz<strong>ed</strong>.</span></a>
+    <div class="nav-links">
+        <a href="#">Weekly Goals.</a>
+        <a href="profile.html">Me.</a>
+    </div>
+<!--    <button class="dropdown-btn">Menu</button>-->
+</nav>
+<div class="mainContainer">
+    <div class="reminderHeader">
+        <div class="titleReminder">
+            <div class="left">
+                <img src="icons/icon%20_bell.png" alt="Today's reminders"> <!-- Add icon here -->
+                <h1>Today's Reminders</h1>
+            </div>
+            <a class="add add-reminder" href="">
+                <div class="right">
+                    <img src="icons/plus-circle.png" alt="Add Reminder"> <!-- Add icon here -->
+                    <p>Add Reminder</p>
+                </div>
+            </a>
+        </div>
+        <div class="reminders">
+
+        </div>
+    </div>
+    <div>
+        <div class="pendingNotes">
+            <div class="titleNotes">
+                <div class="headerNotes">
+                    <img src="icons/Notes_.png" alt="Pending Notes"> <!-- Add icon here -->
+                    <h1>Pending Notes</h1>
+                </div>
+                <a class="add-note" href="">
+                    <div class="add right">
+                        <img src="icons/plus-circle.png" alt="Add Note"> <!-- Add icon here -->
+                        <p class="addNote">Add Note</p>
+                    </div>
+                </a>
+            </div>
+            <div class="noteContainer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/app.js"></script>
+
+</body>
+
+</html>
