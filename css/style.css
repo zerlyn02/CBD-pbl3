@@ -755,3 +755,54 @@ nav {
     background-color: rgba(148, 117, 87, 0.49);
     border-radius: 5px;
 }
+
+.containerreminder{
+                max-width:650px;
+                margin:auto;
+                padding: 2px 20px 20px 20px;
+                background-color: #ffdd9f;
+                border-radius: 10px;
+                border: 1px solid #584128;
+}
+            .containerreminder .o{
+                width:90%;
+                margin: 10px 10px;
+                border-radius: 5px;
+            }
+            .containerreminder .p{
+                width:30%;
+                margin: 10px 0px;
+            }
+            .tab{
+                max-width:650px;
+                margin:auto;
+                padding: 2px 20px 20px 20px;
+                background-color: #ffdd9f;
+                border-radius: 10px;
+                border: 1px solid #584128;
+            }
+            .tab table{
+                margin-top: 10px;
+                border-collapse: collapse;
+                
+            }
+            .tab th{
+                padding: 5px 45px;
+                border: solid black;
+                background-color: rgb(250, 250, 250);
+            }
+            td{
+                padding: 5px;
+                border: 1px solid black;
+                background-color: rgb(250, 250, 250);
+                text-align: center;
+            }
+            button{
+                background-color: #584128;
+                border-radius: 10px;
+                font-weight: bold;
+                color: white;
+            }
+            button:hover{
+                background-color: rgb(77, 88, 185);
+            }
