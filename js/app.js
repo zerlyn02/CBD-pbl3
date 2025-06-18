@@ -167,6 +167,30 @@ deleteBtn.addEventListener('click', () => {
                 
             }
         });
+
+        const editBtn = note.querySelector('.option:not(.removeNote)');
+editBtn.addEventListener('click', () => {
+    // Show the note form
+    document.getElementById('note-form').style.display = 'block';
+
+    // Populate form fields with current note data
+    document.getElementById('titleN').value = this.title;
+    document.getElementById('detailsN').value = this.details;
+    document.getElementById('dateN').value = this.date;
+
+    // Set color selection
+    document.querySelectorAll('.note-form-container .Color-circle').forEach(c => {
+        c.classList.remove('selectedColor');
+        if (window.getComputedStyle(c).backgroundColor === this.color) {
+            c.classList.add('selectedColor');
+        }
+    });
+
+    // Store the note's title (or a unique id if you have one) in a data attribute for editing
+    document.getElementById('note-form').setAttribute('data-edit-title', this.title);
+    document.querySelector('.addN').textContent = 'Save Changes';
+
+});
     }
 
 
@@ -231,10 +255,39 @@ document.querySelector('.addN').addEventListener('click', function (e) {
         return;
     }
 
-    const note = new Note(title, details, date, flags, color);
-    note.createNote();
-    note.saveNote();
+    let notes = localStorage.getItem('notes');
+    notes = notes ? JSON.parse(notes) : [];
+
+    const editTitle = document.getElementById('note-form').getAttribute('data-edit-title');
+
+    if (editTitle) {
+        // Editing an existing note
+        notes = notes.map(note => {
+            if (note.title === editTitle) {
+                return { title, details, date, flags, color }; // updated note
+            }
+            return note;
+        });
+
+        localStorage.setItem('notes', JSON.stringify(notes));
+        document.getElementById('note-form').removeAttribute('data-edit-title');
+    } else {
+        // Adding a new note
+        const note = new Note(title, details, date, flags, color);
+        note.saveNote();
+    }
+
+    // Clear notes and reload to reflect changes
+    document.querySelector('.noteContainer').innerHTML = '';
+    Note.loadNotes();
+
+    // Hide form and reset fields
+    document.getElementById('note-form').style.display = 'none';
+    titleElement.value = '';
+    detailsElement.value = '';
+    dateElement.value = '';
 });
+
 
 
 
