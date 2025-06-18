@@ -69,55 +69,104 @@ class Note {
     }
 
     createNote() {
-        // Create a new note element
         const note = document.createElement('div');
         note.classList.add('note');
         const formattedDetails = this.details.replace(/\n/g, '<br>');
         note.style.backgroundColor = this.color;
         const imgSrc = this.color !== "rgb(88, 65, 40)" ? "icons/settingsIcon.svg" : "icons/lightSettingsIcon.svg";
 
-        // Set the innerHTML of the note
         note.innerHTML = `
-        <div class="NoteHeader">
-            <p class="noteTitle">${this.title}</p>
-            <div class="dropdown">
-                <div class="settings-icon-container">
-                    <img src="${imgSrc}" alt="settings">
-                </div>
-                <div class="dropdown-menu">
-                    <a class="option">Edit</a>
-                    <a class="option removeNote">Delete</a>
+            <div class="NoteHeader">
+                <p class="noteTitle">${this.title}</p>
+                <div class="dropdown">
+                    <div class="settings-icon-container">
+                        <img src="${imgSrc}" alt="settings">
+                    </div>
+                    <div class="dropdown-menu">
+                        <a class="option">Edit</a>
+                        <a class="option removeNote">Delete</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <p class="content">${formattedDetails}</p>
-        <div class="flags">
-            ${this.flags.map(flag => `<div class="flag ${flag}">${flag}</div>`).join('')}
-        </div>
-    `;
+            <p class="content">${formattedDetails}</p>
+            <div class="flags">
+                ${this.flags.map(flag => `<div class="flag ${flag}">${flag}</div>`).join('')}
+            </div>
+            <div class="noteCheckbox" style="margin-top: 10px;">
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" class="markDone">
+                    <span>Mark as completed</span>
+                </label>
+            </div>
+        `;
 
         if (this.color === "rgb(88, 65, 40)") {
             note.classList.add('darkNote');
         }
 
-        // Append the note to the note container
         const noteContainer = document.querySelector('.noteContainer');
-
         if (document.querySelector('.no-notes')) {
             noteContainer.innerHTML = '';
         }
-
         noteContainer.appendChild(note);
 
+        // Handle dark dropdown styles
         const dropdownMenu = note.querySelector('.dropdown-menu');
         if (note.classList.contains('darkNote')) {
             dropdownMenu.style.border = '2px solid #fff';
             const dropdownMenuItems = dropdownMenu.querySelectorAll('*');
-            dropdownMenuItems.forEach(function (item) {
+            dropdownMenuItems.forEach(item => {
                 item.style.color = '#fff';
             });
         }
         dropdownMenu.style.backgroundColor = this.color;
+
+        // ✅ Checkbox logic
+        const checkbox = note.querySelector('.markDone');
+        checkbox.addEventListener('change', function () {
+            if (checkbox.checked) {
+                // Remove from current container
+                note.remove();
+
+                // Create completed section if not exists
+                let completedSection = document.querySelector('.completedNotesContainer');
+                if (!completedSection) {
+                    completedSection = document.createElement('div');
+                    completedSection.classList.add('completedNotesContainer');
+                    noteContainer.parentElement.appendChild(completedSection);
+                }
+
+                // Remove checkbox div
+                const checkboxDiv = note.querySelector('.noteCheckbox');
+                if (checkboxDiv) checkboxDiv.remove();
+
+                // Add a message or class to show it's complete
+                const doneMsg = document.createElement('p');
+                doneMsg.textContent = "✅ This task is completed.";
+                doneMsg.style.fontStyle = "italic";
+                doneMsg.style.marginTop = "10px";
+                note.appendChild(doneMsg);
+
+                // Add note to completed section
+                completedSection.appendChild(note);
+
+                const deleteBtn = note.querySelector('.removeNote');
+deleteBtn.addEventListener('click', () => {
+    note.remove();
+
+    const noteContainer = document.querySelector('.noteContainer');
+    if (noteContainer.children.length === 0) {
+        noteContainer.innerHTML = '<p class="no-notes">No pending notes</p>';
+    }
+
+    const completedSection = document.querySelector('.completedNotesContainer');
+    if (completedSection && completedSection.children.length === 0) {
+        completedSection.remove();
+    }
+});
+                
+            }
+        });
     }
 
 
